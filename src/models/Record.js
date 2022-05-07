@@ -10,12 +10,12 @@ const RecordSchema = new Schema({
     type: String,
     required: true,
   },
-  // value: {
-  //   required: true,
-  // },
-  // timestamp: {
-  //   required: true,
-  // },
+  value: {
+    required: true,
+  },
+  timestamp: {
+    required: true,
+  },
 });
 
 const RecordModel = mongoose.model("Record", RecordSchema);
