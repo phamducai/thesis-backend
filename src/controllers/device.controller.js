@@ -1,11 +1,11 @@
-import deviceModel from "../models/Device.js";
+import Model from "../models/Device.js";
 
 //all get add device
 export const addDevice = async (request, response) => {
   const user = request.body;
 
   try {
-    const newDevice = new deviceModel(user);
+    const newDevice = new Model(user);
     await newDevice.save();
 
     response.json(newDevice);
@@ -18,7 +18,7 @@ export const addDevice = async (request, response) => {
 export const getAllDevices = async (req, res) => {
   const query = req.query;
   try {
-    const users = await deviceModel.find(query);
+    const users = await Model.find(query);
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -28,7 +28,7 @@ export const getAllDevices = async (req, res) => {
 // Get a  by id
 export const getDeviceById = async (request, response) => {
   try {
-    const user = await deviceModel.findById(request.params.id);
+    const user = await Model.findById(request.params.id);
     response.status(200).json(user);
   } catch (error) {
     response.status(404).json({ message: error.message });
@@ -41,7 +41,7 @@ export const updateDeviceById = async (req, res) => {
   const updates = req.body;
 
   try {
-    await deviceModel.updateOne({ _id: id }, updates);
+    await Model.updateOne({ _id: id }, updates);
     return res.sendStatus(200);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -50,7 +50,7 @@ export const updateDeviceById = async (req, res) => {
 
 export const deleteDeviceById = async (request, response) => {
   try {
-    await deviceModel.deleteOne({ _id: request.params.id });
+    await Model.deleteOne({ _id: request.params.id });
     response.status(201).json("User deleted Successfully");
   } catch (error) {
     response.status(409).json({ message: error.message });

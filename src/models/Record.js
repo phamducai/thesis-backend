@@ -10,12 +10,9 @@ const RecordSchema = new Schema({
     type: String,
     required: true,
   },
-  value: {
-    required: true,
-  },
-  timestamp: {
-    required: true,
-  },
+  sample: {
+    type: Object
+  }
 });
 
 const RecordModel = mongoose.model("Record", RecordSchema);

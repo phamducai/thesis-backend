@@ -1,10 +1,12 @@
-import Connectiondb from "./db.js";
+import db from "./db.js";
 import app from "./app.js";
+
+import mqtt from "./mqtt.js"
 
 const PORT = 8080;
 
 async function main() {
-  await Connectiondb();
+  await db();
   app.listen(PORT, () => console.log(`server running ${PORT}`));
 }
 
