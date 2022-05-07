@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morganLogger("dev"));
-//setup duong truyen
+//setup duong truyen cc
 
 app.use("/user", userRoute);
 app.use("/room", roomRoute);
