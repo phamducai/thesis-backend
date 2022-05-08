@@ -25,7 +25,6 @@ client.on("message", async (topic, msgBuff) => {
   // msgBuff is a buffer, so convert it to string
   const msgStr = msgBuff.toString();
 
-
   let msgObj;
   try {
     msgObj = JSON.parse(msgStr);
@@ -33,18 +32,18 @@ client.on("message", async (topic, msgBuff) => {
     console.log(error.message);
     return;
   }
-  
 
   const { action } = msgObj;
 
   if (action === "provision") {
     console.log("provision");
-    const { deviceName, deviceType, channels } = msgObj;
+    const { deviceName, deviceType, channels, refRoom } = msgObj;
 
     const device = await Device.create({
       name: deviceName,
       type: deviceType,
       attributes: channels,
+      refRoom: refRoom,
     });
 
     client.publish(
@@ -58,7 +57,7 @@ client.on("message", async (topic, msgBuff) => {
 
     // Update Device in DB
     await Device.updateOne({ _id: deviceId }, { attributes: { channels } });
- 
+
     // add Record in DB
     const records = Object.keys(channels).map((attribute) => ({
       deviceId: deviceId,
@@ -66,9 +65,7 @@ client.on("message", async (topic, msgBuff) => {
       sample: {
         timestamp: new Date(),
         value: channels[attribute],
-      }
-      
-      
+      },
     }));
     await Record.insertMany(records);
   }
