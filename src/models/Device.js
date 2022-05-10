@@ -12,6 +12,7 @@ const DeviceSchema = new Schema({
   },
   attributes: {
     type: Object,
+    default: {},
   },
 
   refRoom: { type: Schema.Types.ObjectId, ref: "Story" },
