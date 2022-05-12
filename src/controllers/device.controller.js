@@ -39,8 +39,9 @@ export const getDeviceById = async (request, response) => {
 export const updateDeviceById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
-
+  console.log(updates)
   try {
+    // mqtt.publish("",JSON.stringify(updates))
     await Model.updateOne({ _id: id }, updates);
     return res.sendStatus(200);
   } catch (error) {
