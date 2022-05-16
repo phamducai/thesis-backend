@@ -37,15 +37,12 @@ client.on("message", async (topic, msgBuff) => {
 
   if (action === "provision") {
     console.log("provision");
-    const { deviceName, deviceType, channels, refRoom } = msgObj;
+    const { deviceName, deviceType} = msgObj;
 
     const device = await Device.create({
       name: deviceName,
       type: deviceType,
-      attributes: channels,
-      refRoom: refRoom,
     });
-
     client.publish(
       "down/" + device._id,
       JSON.stringify({ action: "provision", deviceId: device._id })

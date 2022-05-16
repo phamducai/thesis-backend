@@ -4,6 +4,9 @@ import DeviceModel from "../models/Device.js";
 //all get add room
 export const addRoom = async (request, response) => {
   const user = request.body;
+  
+  
+console.log(user)
 
   try {
     const newRoom = new RoomModel(user);

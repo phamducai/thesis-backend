@@ -3,8 +3,9 @@ import Model from "../models/Device.js";
 //all get add device
 export const addDevice = async (request, response) => {
   const user = request.body;
-
+   console.log(user)
   try {
+    
     const newDevice = new Model(user);
     await newDevice.save();
 
