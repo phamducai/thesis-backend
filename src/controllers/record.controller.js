@@ -1,5 +1,4 @@
-import Record from "../models/Record.js"
-
+const Record =require ("../models/Record")
 const RecordController = {
   getRecords: async (req,res) => {
     const {deviceId, attribute} = req.params;
@@ -8,4 +7,4 @@ const RecordController = {
   }
 };
 
-export default RecordController;
+module.exports = RecordController;

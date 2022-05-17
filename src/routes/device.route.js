@@ -1,19 +1,13 @@
-import express from "express";
-
-import {
-  addDevice,
-  getAllDevices,
-  getDeviceById,
-  updateDeviceById,
-  deleteDeviceById,
-} from "../controllers/device.controller.js";
-
+const express =require("express") ;
 const router = express.Router();
 
-router.post("/", addDevice);
-router.get("/", getAllDevices);
-router.get("/:id", getDeviceById);
-router.patch("/:id", updateDeviceById);
-router.delete("/:id", deleteDeviceById);
+const device = require('../controllers/device.controller');
 
-export default router;
+
+router.post("/", device.addDevice);
+router.get("/", device.getAllDevices);
+router.get("/:id", device.getDeviceById);
+router.patch("/:id", device.updateDeviceById);
+router.delete("/:id", device.deleteDeviceById);
+
+module.exports= router;

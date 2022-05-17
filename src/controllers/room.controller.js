@@ -1,8 +1,8 @@
-import RoomModel from "../models/Room.js";
-import DeviceModel from "../models/Device.js";
+const RoomModel =require("../models/Room") ;
+const DeviceModel =require ('../models/Device');
 
 //all get add room
-export const addRoom = async (request, response) => {
+const addRoom = async (request, response) => {
   const user = request.body;
   
   
@@ -19,7 +19,7 @@ console.log(user)
   }
 }; // Get all
 
-export const getAllRooms = async (request, response) => {
+const getAllRooms = async (request, response) => {
   try {
     const users = await RoomModel.find();
     response.status(200).json(users);
@@ -28,7 +28,7 @@ export const getAllRooms = async (request, response) => {
   }
 };
 // Get a  by id
-export const getRoomById = async (request, response) => {
+const getRoomById = async (request, response) => {
   try {
     const user = await RoomModel.findById(request.params.id);
     response.status(200).json(user);
@@ -37,7 +37,7 @@ export const getRoomById = async (request, response) => {
   }
 };
 // Save data of edited  in the database
-export const updateRoomById = async (req, res) => {
+const updateRoomById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
 
@@ -49,7 +49,7 @@ export const updateRoomById = async (req, res) => {
   }
 };
 // deleting data of  from the database
-export const deleteRoomById = async (req, res) => {
+const deleteRoomById = async (req, res) => {
   const roomId = req.params.id;
   try {
     await RoomModel.deleteOne({ _id: roomId });
@@ -59,3 +59,12 @@ export const deleteRoomById = async (req, res) => {
     res.status(409).json({ message: error.message });
   }
 };
+const room = {
+  addRoom,
+  getAllRooms,
+  getRoomById,
+  updateRoomById,
+  deleteRoomById,
+};
+
+module.exports = room;

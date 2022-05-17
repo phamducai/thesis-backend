@@ -1,13 +1,20 @@
-import express from "express";
-
-import UserController from "../controllers/user.controller.js";
-
+const express = require("express");
 const router = express.Router();
+const User = require("../models/User");
 
-router.post("/", UserController.addUser);
-router.get("/", UserController.getAllUsers);
-router.get("/:id", UserController.getUserById);
-router.put("/:id", UserController.updateUserById);
-router.delete("/:id", UserController.deleteUserById);
+router.post("/", async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.sendStatus(400);
 
-export default router;
+  const user = new User({ username });
+
+  try {
+    const registedUser = await User.register(user, password);
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error.message);
+    return res.sendStatus(400);
+  }
+});
+
+module.exports = router;

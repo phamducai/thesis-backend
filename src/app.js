@@ -1,11 +1,8 @@
-import express from "express";
-import cors from "cors";
-import morganLogger from "morgan";
+const express = require("express");
+require("dotenv").config();
 
-import userRoute from "./routes/user.route.js";
-import roomRoute from "./routes/room.route.js";
-import deviceRoute from "./routes/device.route.js";
-import recordRoute from "./routes/record.route.js";
+const cors = require("cors");
+const morganLogger = require("morgan");
 
 const app = express();
 
@@ -15,11 +12,30 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morganLogger("dev"));
-//setup duong truyen cc
 
-app.use("/user", userRoute);
-app.use("/room", roomRoute);
-app.use("/device", deviceRoute);
-app.use("/record", recordRoute);
+const sessionConfig = {
+  cookie: { maxAge: 1000 * 60 * 60 * 24 },
+  resave: false,
+  saveUninitialized: false,
+  secret: "topsecret",
+};
+app.use(require("express-session")(sessionConfig));
 
-export default app;
+const passport = require("passport");
+app.use(passport.initialize());
+app.use(passport.session());
+
+const User = require("./models/User");
+const LocalStrategy = require("passport-local");
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use("/room", require("./routes/room.route"));
+app.use("/device", require("./routes/device.route"));
+app.use("/record", require("./routes/record.route"));
+
+app.use("/auth", require("./routes/auth.route"));
+app.use("/user", require("./routes/user.route"));
+
+module.exports = app;

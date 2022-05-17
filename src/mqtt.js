@@ -1,7 +1,7 @@
-import mqtt from "mqtt";
+const mqtt =require('mqtt');
 
-import Device from "./models/Device.js";
-import Record from "./models/Record.js";
+const Device =require('./models/Device');
+const Record =require('./models/Record');
 
 const client = mqtt.connect("mqtt://test.mosquitto.org", {
   reconnectPeriod: 0,
@@ -68,4 +68,4 @@ client.on("message", async (topic, msgBuff) => {
   }
 });
 
-export default client;
+module.exports=  client;

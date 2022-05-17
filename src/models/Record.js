@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose")
+
+
 const Schema = mongoose.Schema;
 
 const RecordSchema = new Schema({
@@ -16,4 +18,5 @@ const RecordSchema = new Schema({
 });
 
 const RecordModel = mongoose.model("Record", RecordSchema);
-export default RecordModel;
+module.exports = RecordModel;
+

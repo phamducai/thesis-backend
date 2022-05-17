@@ -1,24 +1,16 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
 
-const Schema = mongoose.Schema;
-
-const UserSchema = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
+const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  {
-    collection: "users",
-    autoIndex: true,
-    timestamps: true,
-  }
-);
+});
 
-const userModel = mongoose.model("users", UserSchema);
-export default userModel;
+UserSchema.plugin(passportLocalMongoose);
+
+const UserModel = mongoose.model("user", UserSchema);
+
+module.exports = UserModel;

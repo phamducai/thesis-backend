@@ -1,7 +1,7 @@
-import Model from "../models/Device.js";
+const Model =require ("../models/Device");
 
 //all get add device
-export const addDevice = async (request, response) => {
+const addDevice = async (request, response) => {
   const user = request.body;
    console.log(user)
   try {
@@ -16,7 +16,7 @@ export const addDevice = async (request, response) => {
   }
 }; // Get all
 
-export const getAllDevices = async (req, res) => {
+const getAllDevices = async (req, res) => {
   const query = req.query;
   try {
     const users = await Model.find(query);
@@ -27,7 +27,7 @@ export const getAllDevices = async (req, res) => {
 };
 
 // Get a  by id
-export const getDeviceById = async (request, response) => {
+const getDeviceById = async (request, response) => {
   try {
     const user = await Model.findById(request.params.id);
     response.status(200).json(user);
@@ -37,7 +37,7 @@ export const getDeviceById = async (request, response) => {
 };
 
 // Save data of edited  in the database
-export const updateDeviceById = async (req, res) => {
+const updateDeviceById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
   console.log(updates)
@@ -50,7 +50,7 @@ export const updateDeviceById = async (req, res) => {
   }
 };
 
-export const deleteDeviceById = async (request, response) => {
+const deleteDeviceById = async (request, response) => {
   try {
     await Model.deleteOne({ _id: request.params.id });
     response.status(201).json("User deleted Successfully");
@@ -58,3 +58,12 @@ export const deleteDeviceById = async (request, response) => {
     response.status(409).json({ message: error.message });
   }
 };
+const device = {
+  addDevice,
+  getAllDevices,
+  getDeviceById,
+  updateDeviceById,
+  deleteDeviceById,
+};
+
+module.exports = device;

@@ -1,9 +1,7 @@
-import express from "express";
-
-import RecordController from "../controllers/record.controller.js";
-
+const express =require("express") ;
 const router = express.Router();
 
-router.get("/:deviceId/:attribute", RecordController.getRecords);
+const RecordController = require('../controllers/record.controller')
 
-export default router;
+router.get("/:deviceId/:attribute", RecordController.getRecords);
+module.exports= router;

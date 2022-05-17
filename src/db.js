@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+const mongoose =require("mongoose") ;
 
 const Connectiondb = async () => {
-  const URL =
-    "mongodb+srv://phamducai2009:123123123@cluster0.ngb6z.mongodb.net/Crud?retryWrites=true&w=majority";
+  const URL ="mongodb+srv://phamducai2009:123123123@cluster0.ngb6z.mongodb.net/Crud?retryWrites=true&w=majority"
+ 
 
   try {
     await mongoose.connect(URL, {
@@ -15,4 +15,4 @@ const Connectiondb = async () => {
   }
 };
 
-export default Connectiondb;
+module.exports= Connectiondb;

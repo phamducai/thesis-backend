@@ -1,19 +1,10 @@
-import express from "express";
-
-import {
-  addRoom,
-  getAllRooms,
-  getRoomById,
-  updateRoomById,
-  deleteRoomById,
-} from "../controllers/room.controller.js";
-
+const express =require('express')
 const router = express.Router();
+const room =require('../controllers/room.controller')
+router.post("/",room.addRoom);
+router.get("/", room.getAllRooms);
+router.get("/:id", room.getRoomById);
+router.patch("/:id", room.updateRoomById);
+router.delete("/:id", room.deleteRoomById);
 
-router.post("/", addRoom);
-router.get("/", getAllRooms);
-router.get("/:id", getRoomById);
-router.patch("/:id", updateRoomById);
-router.delete("/:id", deleteRoomById);
-
-export default router;
+module.exports=  router;

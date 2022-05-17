@@ -1,8 +1,6 @@
-import db from "./db.js";
-import app from "./app.js";
-
-import mqtt from "./mqtt.js"
-
+const db =require('./db');
+const app = require('./app');
+require('./mqtt')
 const PORT = 8080;
 
 async function main() {
