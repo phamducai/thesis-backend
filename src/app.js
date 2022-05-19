@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morganLogger("dev"));
 
 const sessionConfig = {
-  cookie: { maxAge: 1000 * 60 * 60 * 24 },
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
   resave: false,
   saveUninitialized: false,
   secret: "topsecret",
@@ -31,6 +31,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use("/building", require("./routes/building.route"));
 app.use("/room", require("./routes/room.route"));
 app.use("/device", require("./routes/device.route"));
 app.use("/record", require("./routes/record.route"));

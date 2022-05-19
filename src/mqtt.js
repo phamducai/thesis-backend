@@ -1,7 +1,9 @@
-const mqtt =require('mqtt');
+const mqtt = require("mqtt");
 
-const Device =require('./models/Device');
-const Record =require('./models/Record');
+const Device = require("./models/Device");
+const Record = require("./models/Record");
+
+const ce = require("./contextEmitter");
 
 const client = mqtt.connect("mqtt://test.mosquitto.org", {
   reconnectPeriod: 0,
@@ -37,7 +39,7 @@ client.on("message", async (topic, msgBuff) => {
 
   if (action === "provision") {
     console.log("provision");
-    const { deviceName, deviceType} = msgObj;
+    const { deviceName, deviceType } = msgObj;
 
     const device = await Device.create({
       name: deviceName,
@@ -52,8 +54,19 @@ client.on("message", async (topic, msgBuff) => {
     const deviceId = topic.slice(3);
     const { channels } = msgObj;
 
+    console.log({ attributes: channels });
+
     // Update Device in DB
-    await Device.updateOne({ _id: deviceId }, { attributes: { channels } });
+    await Device.updateOne({ _id: deviceId }, { attributes: channels });
+
+    for (const key in channels) {
+      ce.publish(
+        `telemetry.${deviceId}.${key}`,
+        JSON.stringify({ value: channels[key], timestamp: new Date() })
+      );
+    }
+
+    return;
 
     // add Record in DB
     const records = Object.keys(channels).map((attribute) => ({
@@ -68,4 +81,4 @@ client.on("message", async (topic, msgBuff) => {
   }
 });
 
-module.exports=  client;
+module.exports = client;

@@ -1,11 +1,16 @@
-const db =require('./db');
-const app = require('./app');
-require('./mqtt')
+require("dotenv").config();
+const db = require("./db");
+
+require("./mqtt");
+
 const PORT = 8080;
+const httpServer = require("http").createServer(require("./app"));
+const io = require("./io");
 
 async function main() {
   await db();
-  app.listen(PORT, () => console.log(`server running ${PORT}`));
+  io.attach(httpServer);
+  httpServer.listen(PORT, () => console.log(`server running ${PORT}`));
 }
 
 main().catch((error) => {
