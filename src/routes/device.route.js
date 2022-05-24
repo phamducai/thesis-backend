@@ -13,7 +13,7 @@ router.post("/add", async (req, res) => {
   const message = { action: "command", command: "permit_join" };
   console.log(message);
   try {
-    mqtt.publish("/down", JSON.stringify(message));
+    mqtt.publish("mybk/down", JSON.stringify(message));
     return res.sendStatus(200);
   } catch (error) {
     console.log(error.message);

@@ -15,7 +15,7 @@ client.on("error", (error) => console.log("error", error.message));
 client.on("connect", () => {
   console.log("connect");
 
-  client.subscribe("up", (error) => {
+  client.subscribe("mybk/up", (error) => {
     if (error) return console.log("error", error.message);
   });
 });
