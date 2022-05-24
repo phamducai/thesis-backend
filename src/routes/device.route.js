@@ -8,7 +8,6 @@ router.get("/", device.getAllDevices);
 router.get("/:id", device.getDeviceById);
 router.patch("/:id", device.updateDeviceById);
 router.delete("/:id", device.deleteDeviceById);
-
 router.post("/add", async (req, res) => {
   const message = { action: "command", command: "permit_join" };
   console.log(message);

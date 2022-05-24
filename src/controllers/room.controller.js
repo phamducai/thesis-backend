@@ -1,12 +1,11 @@
-const RoomModel =require("../models/Room") ;
-const DeviceModel =require ('../models/Device');
+const RoomModel = require("../models/Room");
+const DeviceModel = require("../models/Device");
 
 //all get add room
 const addRoom = async (request, response) => {
   const user = request.body;
-  
-  
-console.log(user)
+
+  console.log(user);
 
   try {
     const newRoom = new RoomModel(user);

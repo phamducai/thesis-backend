@@ -40,10 +40,12 @@ const getDeviceById = async (request, response) => {
 const updateDeviceById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
-  console.log(updates);
+  console.log(id);
+
   try {
-    mqtt.publish("mybk/down", JSON.stringify(updates));
     await Model.updateOne({ _id: id }, updates);
+    mqtt.publish("mybk/down", JSON.stringify(updates));
+    console.log(updates);
     return res.sendStatus(200);
   } catch (error) {
     res.status(409).json({ message: error.message });
