@@ -42,7 +42,7 @@ const updateDeviceById = async (req, res) => {
   const updates = req.body;
   console.log(updates);
   try {
-    mqtt.publish("", JSON.stringify(updates));
+    mqtt.publish("mybk/down", JSON.stringify(updates));
     await Model.updateOne({ _id: id }, updates);
     return res.sendStatus(200);
   } catch (error) {
@@ -51,8 +51,12 @@ const updateDeviceById = async (req, res) => {
 };
 
 const deleteDeviceById = async (request, response) => {
+  const id = request.params.id;
+  const message = { action: "command", command: "leave_req", dev_addr: id };
+  console.log(message);
   try {
-    await Model.deleteOne({ _id: request.params.id });
+    mqtt.publish("mybk/down", JSON.stringify(message));
+    await Model.deleteOne({ dev_addr: id });
     response.status(201).json("User deleted Successfully");
   } catch (error) {
     response.status(409).json({ message: error.message });
