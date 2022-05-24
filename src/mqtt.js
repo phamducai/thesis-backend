@@ -4,22 +4,19 @@ const Device = require("./models/Device");
 const Record = require("./models/Record");
 
 const ce = require("./contextEmitter");
+// const MQTT_Broker = "192.168.137.1";
 
 const client = mqtt.connect("mqtt://test.mosquitto.org", {
   reconnectPeriod: 0,
 });
 
-client.on("error", (error) => {
-  console.log("error", error.message);
-});
+client.on("error", (error) => console.log("error", error.message));
 
 client.on("connect", () => {
   console.log("connect");
 
-  client.subscribe("up/+", (error) => {
+  client.subscribe("up", (error) => {
     if (error) return console.log("error", error.message);
-
-    console.log("subscribed success");
   });
 });
 
@@ -39,42 +36,34 @@ client.on("message", async (topic, msgBuff) => {
 
   if (action === "provision") {
     console.log("provision");
-    const { deviceName, deviceType } = msgObj;
+    const { dev_addr, type } = msgObj;
 
     const device = await Device.create({
-      name: deviceName,
-      type: deviceType,
+      dev_addr: dev_addr,
+      type: type,
     });
-    client.publish(
-      "down/" + device._id,
-      JSON.stringify({ action: "provision", deviceId: device._id })
-    );
   } else if (action === "telemetry") {
-    console.log("telemetry");
-    const deviceId = topic.slice(3);
-    const { channels } = msgObj;
+    const { action, dev_addr, ...attributes } = msgObj;
+    const foundDevice = await Device.findOne({ dev_addr: dev_addr }).exec();
 
-    console.log({ attributes: channels });
-
+    const deviceId = foundDevice._id;
     // Update Device in DB
-    await Device.updateOne({ _id: deviceId }, { attributes: channels });
+    await Device.updateOne({ _id: deviceId }, attributes);
 
-    for (const key in channels) {
+    for (const attribute in attributes) {
       ce.publish(
-        `telemetry.${deviceId}.${key}`,
-        JSON.stringify({ value: channels[key], timestamp: new Date() })
+        `telemetry.${deviceId}.${attribute}`,
+        JSON.stringify({ value: attributes[attribute], timestamp: new Date() })
       );
     }
 
-    return;
-
     // add Record in DB
-    const records = Object.keys(channels).map((attribute) => ({
+    const records = Object.keys(attributes).map((attribute) => ({
       deviceId: deviceId,
       attribute: attribute,
       sample: {
         timestamp: new Date(),
-        value: channels[attribute],
+        value: attributes[attribute],
       },
     }));
     await Record.insertMany(records);

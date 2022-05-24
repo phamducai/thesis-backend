@@ -1,11 +1,11 @@
-const Model =require ("../models/Device");
+const Model = require("../models/Device");
+const mqtt = require("../mqtt");
 
 //all get add device
 const addDevice = async (request, response) => {
   const user = request.body;
-   console.log(user)
+  console.log(user);
   try {
-    
     const newDevice = new Model(user);
     await newDevice.save();
 
@@ -40,9 +40,9 @@ const getDeviceById = async (request, response) => {
 const updateDeviceById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
-  console.log(updates)
+  console.log(updates);
   try {
-    // mqtt.publish("",JSON.stringify(updates))
+    mqtt.publish("", JSON.stringify(updates));
     await Model.updateOne({ _id: id }, updates);
     return res.sendStatus(200);
   } catch (error) {
