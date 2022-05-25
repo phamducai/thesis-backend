@@ -1,5 +1,4 @@
-const mongoose = require("mongoose")
-
+const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
@@ -13,10 +12,9 @@ const RecordSchema = new Schema({
     required: true,
   },
   sample: {
-    type: Object
-  }
+    type: Object,
+  },
 });
 
 const RecordModel = mongoose.model("Record", RecordSchema);
 module.exports = RecordModel;
-

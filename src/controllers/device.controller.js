@@ -22,7 +22,8 @@ const getAllDevices = async (req, res) => {
     const users = await Model.find(query);
     res.status(200).json(users);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.log(error);
+    return res.sendStatus(400);
   }
 };
 
@@ -32,7 +33,8 @@ const getDeviceById = async (request, response) => {
     const user = await Model.findById(request.params.id);
     response.status(200).json(user);
   } catch (error) {
-    response.status(404).json({ message: error.message });
+    console.log(error);
+    return res.sendStatus(400);
   }
 };
 
@@ -40,7 +42,8 @@ const getDeviceById = async (request, response) => {
 const updateDeviceById = async (req, res) => {
   const id = req.params.id;
   const updates = req.body;
-  console.log(id);
+
+  console.log(req.body);
 
   try {
     await Model.updateOne({ _id: id }, updates);
@@ -48,7 +51,8 @@ const updateDeviceById = async (req, res) => {
     console.log(updates);
     return res.sendStatus(200);
   } catch (error) {
-    res.status(409).json({ message: error.message });
+    console.log(error);
+    return res.sendStatus(400);
   }
 };
 
@@ -61,7 +65,33 @@ const deleteDeviceById = async (request, response) => {
     await Model.deleteOne({ dev_addr: id });
     response.status(201).json("User deleted Successfully");
   } catch (error) {
-    response.status(409).json({ message: error.message });
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
+
+const sendCommand = async (req, res) => {
+  const { id } = req.params;
+  const commandObject = req.body;
+
+  try {
+    let foundDevice = await Model.findById(id);
+
+    if (!foundDevice) return res.sendStatus(200);
+
+    const msgObj = {
+      ...commandObject,
+      action: "command",
+      dev_addr: foundDevice.dev_addr,
+    };
+    console.log(msgObj);
+
+    mqtt.publish("mybk/down", JSON.stringify(msgObj));
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error.message);
+    return res.sendStatus(400);
   }
 };
 const device = {
@@ -70,6 +100,7 @@ const device = {
   getDeviceById,
   updateDeviceById,
   deleteDeviceById,
+  sendCommand,
 };
 
 module.exports = device;

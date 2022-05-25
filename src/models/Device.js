@@ -1,9 +1,13 @@
 const mongoose = require("mongoose");
+const { stringify } = require("nodemon/lib/utils");
 
 const Schema = mongoose.Schema;
 
 const DeviceSchema = new Schema({
   name: {
+    type: String,
+  },
+  dev_addr: {
     type: String,
   },
 
@@ -19,16 +23,24 @@ const DeviceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Story",
   },
+  name1: {
+    type: String,
+  },
+  name2: {
+    type: String,
+  },
+});
 
-  //e viet
-  dev_addr: { type: String, unique: true, require: true },
-  name1: String,
-  name2: String,
-  status: Boolean,
-  status1: String,
-  status2: String,
-  status3: String,
+// Duplicate the ID field.
+DeviceSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+// Ensure virtual fields are serialised.
+DeviceSchema.set("toJSON", {
+  virtuals: true,
 });
 
 const DeviceModel = mongoose.model("Device", DeviceSchema);
+
 module.exports = DeviceModel;
