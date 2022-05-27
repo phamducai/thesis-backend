@@ -1,5 +1,5 @@
 const RoomModel = require("../models/Room");
-const DeviceModel = require("../models/Device");
+// const DeviceModel = require("../models/Device");
 
 //all get add room
 const addRoom = async (request, response) => {
@@ -52,7 +52,7 @@ const deleteRoomById = async (req, res) => {
   const roomId = req.params.id;
   try {
     await RoomModel.deleteOne({ _id: roomId });
-    await DeviceModel.deleteMany({ refRoom: roomId });
+    // await DeviceModel.deleteMany({ refRoom: roomId });
     await res.status(201).json("User deleted Successfully");
   } catch (error) {
     res.status(409).json({ message: error.message });

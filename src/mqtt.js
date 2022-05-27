@@ -3,7 +3,7 @@ const mqtt = require("mqtt");
 const Device = require("./models/Device");
 const Record = require("./models/Record");
 
-const ce = require("./contextEmitter");
+const socket = require("./contextEmitter");
 // const MQTT_Broker = "192.168.137.1";
 
 const client = mqtt.connect("mqtt://test.mosquitto.org", {
@@ -51,7 +51,7 @@ client.on("message", async (topic, msgBuff) => {
     await Device.updateOne({ _id: deviceId }, attributes);
 
     for (const attribute in attributes) {
-      ce.publish(
+      socket.publish(
         `telemetry.${deviceId}.${attribute}`,
         JSON.stringify({ value: attributes[attribute], timestamp: new Date() })
       );

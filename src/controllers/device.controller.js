@@ -58,11 +58,17 @@ const updateDeviceById = async (req, res) => {
 
 const deleteDeviceById = async (request, response) => {
   const id = request.params.id;
-  const message = { action: "command", command: "leave_req", dev_addr: id };
+  let foundDevice = await Model.findById(id);
+  const message = {
+    action: "command",
+    command: "leave_req",
+    dev_addr: foundDevice.dev_addr,
+  };
   console.log(message);
   try {
     mqtt.publish("mybk/down", JSON.stringify(message));
-    await Model.deleteOne({ dev_addr: id });
+
+    await Model.deleteOne({ _id: id });
     response.status(201).json("User deleted Successfully");
   } catch (error) {
     console.log(error);
