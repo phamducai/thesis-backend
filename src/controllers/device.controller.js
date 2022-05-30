@@ -55,6 +55,19 @@ const updateDeviceById = async (req, res) => {
     return res.sendStatus(400);
   }
 };
+// const Findivce = async (req, res) => {
+//   console.log(searchdevice);
+//   try {
+//     (await Model.find().toArray()).map(({ _id, ...name }) => ({
+//       id: _id,
+//       ...name,
+//     }));
+//     return res.sendStatus(200);
+//   } catch (error) {
+//     console.log(error);
+//     return res.sendStatus(400);
+//   }
+// };
 
 const deleteDeviceById = async (request, response) => {
   const id = request.params.id;
@@ -87,7 +100,7 @@ const sendCommand = async (req, res) => {
 
     const msgObj = {
       ...commandObject,
-      action: "command",
+      action: "control",
       dev_addr: foundDevice.dev_addr,
     };
     console.log(msgObj);
@@ -100,6 +113,7 @@ const sendCommand = async (req, res) => {
     return res.sendStatus(400);
   }
 };
+
 const device = {
   addDevice,
   getAllDevices,

@@ -13,7 +13,6 @@ const DeviceSchema = new Schema({
 
   type: {
     type: String,
-    required: true,
   },
   attributes: {
     type: Object,

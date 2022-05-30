@@ -7,6 +7,7 @@ router.post("/", device.addDevice);
 router.get("/", device.getAllDevices);
 router.get("/add", async (req, res) => {
   const message = { action: "command", command: "permit_join" };
+  console.log(message);
 
   try {
     mqtt.publish("mybk/down", JSON.stringify(message));

@@ -5,8 +5,9 @@ const Record = require("./models/Record");
 
 const socket = require("./contextEmitter");
 // const MQTT_Broker = "192.168.137.1";
+//mqtt://broker.hivemq.com
 
-const client = mqtt.connect("mqtt://test.mosquitto.org", {
+const client = mqtt.connect("", {
   reconnectPeriod: 0,
 });
 
@@ -24,6 +25,7 @@ client.on("message", async (topic, msgBuff) => {
   // msgBuff is a buffer, so convert it to string
   const msgStr = msgBuff.toString();
 
+  console.log(msgStr);
   let msgObj;
   try {
     msgObj = JSON.parse(msgStr);
@@ -33,7 +35,6 @@ client.on("message", async (topic, msgBuff) => {
   }
 
   const { action } = msgObj;
-
   if (action === "provision") {
     console.log("provision");
     const { dev_addr, type } = msgObj;
@@ -43,7 +44,7 @@ client.on("message", async (topic, msgBuff) => {
       type: type,
     });
   } else if (action === "telemetry") {
-    const { action, dev_addr, ...attributes } = msgObj;
+    const { action, dev_addr, timestamp, ...attributes } = msgObj;
     const foundDevice = await Device.findOne({ dev_addr: dev_addr }).exec();
 
     const deviceId = foundDevice._id;
@@ -53,19 +54,30 @@ client.on("message", async (topic, msgBuff) => {
     for (const attribute in attributes) {
       socket.publish(
         `telemetry.${deviceId}.${attribute}`,
-        JSON.stringify({ value: attributes[attribute], timestamp: new Date() })
+        JSON.stringify({
+          value:
+            typeof attributes[attribute] === "number"
+              ? Math.round(attributes[attribute] * 100) / 100
+              : attributes[attribute],
+          timestamp: new Date(timestamp * 1000 + 25200000),
+        })
       );
     }
 
     // add Record in DB
+
     const records = Object.keys(attributes).map((attribute) => ({
       deviceId: deviceId,
       attribute: attribute,
       sample: {
-        timestamp: new Date(),
-        value: attributes[attribute],
+        timestamp: new Date(timestamp * 1000 + 25200000),
+        value:
+          typeof attributes[attribute] === "number"
+            ? Math.round(attributes[attribute] * 100) / 100
+            : attributes[attribute],
       },
     }));
+
     await Record.insertMany(records);
   }
 });
